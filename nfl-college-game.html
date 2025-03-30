@@ -7,28 +7,66 @@
     <link rel="stylesheet" href="nfl-college-styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        // Debug information
+        console.log('Head section loaded');
+    </script>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>NFL College Guessing Game</h1>
+            <h1>Gridiron Grads: NFL College Challenge</h1>
             <p class="subtitle">Test your NFL knowledge!</p>
         </header>
+
+        <div id="login-screen">
+            <h2>Welcome to Gridiron Grads!</h2>
+            <p>Enter your username to start playing:</p>
+            <input type="text" id="username-input" placeholder="Username (3-20 characters)">
+            <button id="start-game-btn">Start Game</button>
+        </div>
+
+        <div id="game-container" style="display: none;">
+            <div class="round-info">
+                <p id="round-status">Round 1 of 3</p>
+                <p id="current-streak">Current Streak: 0 days</p>
+                <p id="best-streak">Best Streak: 0 days</p>
+            </div>
+
+            <div class="player-display">
+                <h2 id="player-name"></h2>
+                <p id="player-position"></p>
+            </div>
+
+            <div class="options-container">
+                <button class="option-button" data-option="0"></button>
+                <button class="option-button" data-option="1"></button>
+                <button class="option-button" data-option="2"></button>
+            </div>
+
+            <p id="message"></p>
+        </div>
+
+        <div id="game-over" style="display: none;">
+            <h2 id="final-message"></h2>
+            <p id="next-game-time"></p>
+            <button id="play-again-btn">Play Again</button>
+        </div>
 
         <div id="leaderboard-section">
             <h2>Global Leaderboard</h2>
             <div class="leaderboard-filters">
                 <div class="filter-group">
-                    <label>Time Period:</label>
+                    <label for="time-filter">Time Period:</label>
                     <select id="time-filter">
-                        <option value="all-time">All Time</option>
+                        <option value="all">All Time</option>
                         <option value="monthly">This Month</option>
                         <option value="weekly">This Week</option>
                         <option value="daily">Today</option>
                     </select>
                 </div>
                 <div class="filter-group">
-                    <label>Sort By:</label>
+                    <label for="sort-filter">Sort By:</label>
                     <select id="sort-filter">
                         <option value="streak">Best Streak</option>
                         <option value="winrate">Win Rate</option>
@@ -37,187 +75,107 @@
                     </select>
                 </div>
             </div>
-            <div class="leaderboard-content">
-                <div id="streak-leaderboard" class="leaderboard">
-                    <div class="leaderboard-header">
-                        <span>Rank</span>
-                        <span>Player</span>
-                        <span>Best Streak</span>
-                        <span>Games</span>
-                    </div>
-                    <div id="streak-leaderboard-content"></div>
+
+            <div id="streak-leaderboard" class="leaderboard">
+                <div class="leaderboard-header">
+                    <span>Rank</span>
+                    <span>Player</span>
+                    <span>Best Streak</span>
+                    <span>Games</span>
                 </div>
-                <div id="winrate-leaderboard" class="leaderboard" style="display: none;">
-                    <div class="leaderboard-header">
-                        <span>Rank</span>
-                        <span>Player</span>
-                        <span>Win Rate</span>
-                        <span>Games</span>
-                    </div>
-                    <div id="winrate-leaderboard-content"></div>
-                </div>
-                <div id="games-leaderboard" class="leaderboard" style="display: none;">
-                    <div class="leaderboard-header">
-                        <span>Rank</span>
-                        <span>Player</span>
-                        <span>Total Games</span>
-                        <span>Win Rate</span>
-                    </div>
-                    <div id="games-leaderboard-content"></div>
-                </div>
-                <div id="perfect-leaderboard" class="leaderboard" style="display: none;">
-                    <div class="leaderboard-header">
-                        <span>Rank</span>
-                        <span>Player</span>
-                        <span>Perfect Games</span>
-                        <span>Total Games</span>
-                    </div>
-                    <div id="perfect-leaderboard-content"></div>
-                </div>
+                <div id="streak-leaderboard-content"></div>
             </div>
-            <div class="leaderboard-stats">
-                <div class="stat-card">
-                    <i class="fas fa-users"></i>
-                    <span>Total Players: <span id="total-players">0</span></span>
+
+            <div id="winrate-leaderboard" class="leaderboard" style="display: none;">
+                <div class="leaderboard-header">
+                    <span>Rank</span>
+                    <span>Player</span>
+                    <span>Win Rate</span>
+                    <span>Games</span>
                 </div>
-                <div class="stat-card">
-                    <i class="fas fa-trophy"></i>
-                    <span>Active Today: <span id="active-today">0</span></span>
+                <div id="winrate-leaderboard-content"></div>
+            </div>
+
+            <div id="games-leaderboard" class="leaderboard" style="display: none;">
+                <div class="leaderboard-header">
+                    <span>Rank</span>
+                    <span>Player</span>
+                    <span>Total Games</span>
+                    <span>Win Rate</span>
                 </div>
-                <div class="stat-card">
-                    <i class="fas fa-fire"></i>
-                    <span>Best Streak: <span id="global-best-streak">0</span></span>
+                <div id="games-leaderboard-content"></div>
+            </div>
+
+            <div id="perfect-leaderboard" class="leaderboard" style="display: none;">
+                <div class="leaderboard-header">
+                    <span>Rank</span>
+                    <span>Player</span>
+                    <span>Perfect Games</span>
+                    <span>Total Games</span>
                 </div>
-                <div class="stat-card">
-                    <i class="fas fa-star"></i>
-                    <span>Perfect Games: <span id="global-perfect">0</span></span>
-                </div>
+                <div id="perfect-leaderboard-content"></div>
             </div>
         </div>
 
-        <div id="login-screen">
-            <h2>Welcome!</h2>
-            <p>Please enter your username to start playing</p>
-            <div class="login-form">
-                <input type="text" id="username-input" placeholder="Enter your username" maxlength="20">
-                <button id="start-game-btn">Start Playing</button>
+        <div class="leaderboard-stats">
+            <div class="stat-item">
+                <i class="fas fa-users"></i>
+                <span>Total Players: </span>
+                <span id="total-players">0</span>
             </div>
-            <p class="username-rules">Username must be 3-20 characters long and can only contain letters, numbers, and underscores</p>
-        </div>
-        
-        <div id="game-container" style="display: none;">
-            <div id="round-info">
-                <h2>Round <span id="current-round">1</span> of 3</h2>
-                <p id="round-status"></p>
-                <p id="current-streak">Current Streak: 0 days</p>
-                <p id="best-streak">Best Streak: 0 days</p>
+            <div class="stat-item">
+                <i class="fas fa-user-clock"></i>
+                <span>Active Today: </span>
+                <span id="active-today">0</span>
             </div>
-            
-            <div id="player-display">
-                <h3>Which college did this player attend?</h3>
-                <p id="player-name"></p>
+            <div class="stat-item">
+                <i class="fas fa-fire"></i>
+                <span>Best Streak: </span>
+                <span id="global-best-streak">0</span>
             </div>
-            
-            <div id="options-container">
-                <button class="option-button" data-option="0"></button>
-                <button class="option-button" data-option="1"></button>
-                <button class="option-button" data-option="2"></button>
-            </div>
-            
-            <div id="message"></div>
-        </div>
-        
-        <div id="game-over" style="display: none;">
-            <h2>Game Over!</h2>
-            <p id="final-message"></p>
-            <p id="next-game-time"></p>
-            <div id="achievement-earned" class="achievement-popup" style="display: none;">
-                <h3>🏆 New Achievement Unlocked!</h3>
-                <p id="achievement-message"></p>
+            <div class="stat-item">
+                <i class="fas fa-trophy"></i>
+                <span>Perfect Games: </span>
+                <span id="global-perfect">0</span>
             </div>
         </div>
 
-        <div id="achievements-section">
-            <h2>Achievements</h2>
-            <div class="achievements-grid">
-                <div class="achievement" id="rookie">
-                    <i class="fas fa-star"></i>
-                    <h3>Rookie</h3>
-                    <p>Complete your first game</p>
-                </div>
-                <div class="achievement" id="streak-3">
-                    <i class="fas fa-fire"></i>
-                    <h3>On Fire</h3>
-                    <p>3-day winning streak</p>
-                </div>
-                <div class="achievement" id="streak-7">
-                    <i class="fas fa-crown"></i>
-                    <h3>Week Warrior</h3>
-                    <p>7-day winning streak</p>
-                </div>
-                <div class="achievement" id="streak-14">
-                    <i class="fas fa-trophy"></i>
-                    <h3>Fortnight Champion</h3>
-                    <p>14-day winning streak</p>
-                </div>
-                <div class="achievement" id="streak-30">
-                    <i class="fas fa-medal"></i>
-                    <h3>Monthly Master</h3>
-                    <p>30-day winning streak</p>
-                </div>
-                <div class="achievement" id="perfect-game">
-                    <i class="fas fa-award"></i>
-                    <h3>Perfect Game</h3>
-                    <p>Complete all rounds without mistakes</p>
-                </div>
-            </div>
-        </div>
-
-        <div id="streak-history">
-            <h2>Streak History</h2>
-            <div id="streak-chart"></div>
-            <div id="streak-stats">
-                <p>Total Games Played: <span id="total-games">0</span></p>
-                <p>Win Rate: <span id="win-rate">0%</span></p>
-                <p>Average Streak: <span id="avg-streak">0</span> days</p>
-            </div>
-        </div>
-
-        <div id="detailed-stats">
-            <h2>Detailed Statistics</h2>
-            <div class="stats-grid">
-                <div class="stats-section">
-                    <h3>Position Performance</h3>
-                    <div id="position-stats"></div>
-                </div>
-                <div class="stats-section">
-                    <h3>College Performance</h3>
-                    <div id="college-stats"></div>
-                </div>
-                <div class="stats-section">
-                    <h3>Time Analysis</h3>
-                    <div id="time-stats"></div>
-                </div>
-                <div class="stats-section">
-                    <h3>Daily Performance</h3>
-                    <div id="daily-stats"></div>
-                </div>
-            </div>
-        </div>
-        
         <footer>
             <p>Created with ❤️ for NFL fans</p>
             <p class="small">New game available daily!</p>
         </footer>
     </div>
+
+    <script>
+        // Debug information
+        console.log('Page loaded');
+    </script>
+    <script>
+        // Check if script exists
+        fetch('nfl-college-script.js')
+            .then(response => {
+                if (response.ok) {
+                    console.log('Script file found');
+                } else {
+                    console.error('Script file not found');
+                }
+            })
+            .catch(error => {
+                console.error('Error checking script:', error);
+            });
+    </script>
     <script src="nfl-college-script.js"></script>
     <script>
         // Initialize the game when the DOM is fully loaded
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded');
             // Initialize game elements
             const startGameBtn = document.getElementById('start-game-btn');
             if (startGameBtn) {
+                console.log('Start game button found');
                 startGameBtn.addEventListener('click', handleLogin);
+            } else {
+                console.error('Start game button not found');
             }
         });
     </script>
