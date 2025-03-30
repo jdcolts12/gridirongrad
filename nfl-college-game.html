@@ -7,10 +7,6 @@
     <link rel="stylesheet" href="nfl-college-styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script>
-        // Debug information
-        console.log('Head section loaded');
-    </script>
 </head>
 <body>
     <div class="container">
@@ -147,36 +143,23 @@
     </div>
 
     <script>
-        // Debug information
-        console.log('Page loaded');
-    </script>
-    <script>
-        // Check if script exists
-        fetch('nfl-college-script.js')
-            .then(response => {
-                if (response.ok) {
-                    console.log('Script file found');
-                } else {
-                    console.error('Script file not found');
-                }
-            })
-            .catch(error => {
-                console.error('Error checking script:', error);
-            });
-    </script>
-    <script src="nfl-college-script.js"></script>
-    <script>
-        // Initialize the game when the DOM is fully loaded
+        // Initialize game when DOM is loaded
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('DOM loaded');
-            // Initialize game elements
-            const startGameBtn = document.getElementById('start-game-btn');
-            if (startGameBtn) {
-                console.log('Start game button found');
-                startGameBtn.addEventListener('click', handleLogin);
-            } else {
-                console.error('Start game button not found');
-            }
+            // Load the game script
+            const script = document.createElement('script');
+            script.src = 'nfl-college-script.js';
+            script.onload = function() {
+                console.log('Game script loaded successfully');
+                // Initialize game elements
+                const startGameBtn = document.getElementById('start-game-btn');
+                if (startGameBtn) {
+                    startGameBtn.addEventListener('click', handleLogin);
+                }
+            };
+            script.onerror = function() {
+                console.error('Failed to load game script');
+            };
+            document.body.appendChild(script);
         });
     </script>
 </body>
